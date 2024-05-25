@@ -1,0 +1,56 @@
+[
+    {
+        "type": "Directory",
+        "name": "c:\\laragon\\www\\pustaka_api\\app\\Http\\Controllers",
+        "parent_id": null,
+        "fsPath": "c:\\laragon\\www\\pustaka_api\\app\\Http\\Controllers",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "whKg3rTRSa7bjEYF"
+    },
+    {
+        "type": "Directory",
+        "name": "c:\\laragon\\www\\pustaka_api\\app\\Http\\Middleware",
+        "parent_id": null,
+        "fsPath": "c:\\laragon\\www\\pustaka_api\\app\\Http\\Middleware",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "s7yLlE2PraKHqk51"
+    },
+    {
+        "type": "Directory",
+        "name": "c:\\laragon\\www\\pustaka_api\\app\\Models",
+        "parent_id": null,
+        "fsPath": "c:\\laragon\\www\\pustaka_api\\app\\Models",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "Y7ieDkKoFPX8SQWs"
+    },
+    {
+        "type": "Directory",
+        "name": "c:\\laragon\\www\\pustaka_api\\database\\migrations",
+        "parent_id": null,
+        "fsPath": "c:\\laragon\\www\\pustaka_api\\database\\migrations",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "jWyLzltDGT29Bfq8"
+    },
+    {
+        "type": "Directory",
+        "name": "c:\\laragon\\www\\pustaka_api\\database\\seeders",
+        "parent_id": null,
+        "fsPath": "c:\\laragon\\www\\pustaka_api\\database\\seeders",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "GPUZoni3XHAIBy4T"
+    },
+    {
+        "type": "File",
+        "name": "c:\\laragon\\www\\pustaka_api\\routes\\api.php",
+        "parent_id": null,
+        "fsPath": "c:\\laragon\\www\\pustaka_api\\routes\\api.php",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "ORxJjYzm5P0ikCG3"
+    }
+]
