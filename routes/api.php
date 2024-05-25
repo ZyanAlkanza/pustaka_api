@@ -45,8 +45,8 @@ Route::get('/book/{id}', [BookController::class, 'show'])->middleware(['auth:san
 Route::patch('/book/{id}', [BookController::class, 'update'])->middleware(['auth:sanctum', 'role']);
 Route::delete('/book/{id}', [BookController::class, 'destroy'])->middleware(['auth:sanctum', 'role']);
 
-Route::get('/transactions', [TransactionController::class, 'index']);
-Route::post('/transaction', [TransactionController::class, 'store']);
-Route::get('/transaction/{id}', [TransactionController::class, 'show']);
-Route::patch('/transaction/{id}', [TransactionController::class, 'update']);
-Route::delete('/transaction/{id}', [TransactionController::class, 'destroy']);
+Route::get('/transactions', [TransactionController::class, 'index'])->middleware(['auth:sanctum', 'role']);
+Route::post('/transaction', [TransactionController::class, 'store'])->middleware(['auth:sanctum', 'role']);
+Route::get('/transaction/{id}', [TransactionController::class, 'show'])->middleware(['auth:sanctum', 'role']);
+Route::patch('/transaction/{id}', [TransactionController::class, 'update'])->middleware(['auth:sanctum', 'role']);
+Route::delete('/transaction/{id}', [TransactionController::class, 'destroy'])->middleware(['auth:sanctum', 'role']);

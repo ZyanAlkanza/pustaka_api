@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -27,12 +28,15 @@ class BookController extends Controller
             'title'       => 'required|unique:books,title',
             'author'      => 'required',
             'book_detail' => 'required',
+            'image'       => 'image|mimes:jpg,jpeg,png|max:1024'
         ],
         [
             'title.required'  => 'This field is required',
             'title.unique'    => 'This title already exists',
             'author.required' => 'This field is required',
-            'book_detail'     => 'This field is required'
+            'book_detail'     => 'This field is required',
+            'image.mimes'     => 'File must be JPEG, JPG or PNG',
+            'image.max'       => 'File size maximum 1Mb'
         ]);
 
         if($validator->fails()){
@@ -43,11 +47,18 @@ class BookController extends Controller
             ], 401);
         }
 
+        if($request->hasFile('image')){
+            $file = $request->file('image');
+            $fileName = $file->getClientOriginalName();
+            Storage::disk('public')->putFileAs('covers', $file, $fileName);
+        }
+
         $data = Book::create([
             'title'       => $request->title,
             'author'      => $request->author,
             'status'      => 1,
             'book_detail' => $request->book_detail,
+            'image'       => $fileName ?? null
         ]);
 
         return response()->json([
@@ -56,7 +67,6 @@ class BookController extends Controller
             'data'    => $data
         ], 200);
     }
-
 
     public function show($id)
     {
@@ -76,20 +86,23 @@ class BookController extends Controller
         }
     }
 
-
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(),
         [
             'title'       => ['required', Rule::unique('books')->ignore($id)],
             'author'      => 'required',
-            'book_detail' => 'required'
+            'book_detail' => 'required',
+            'book_detail' => 'required',
+            'image'       => 'image|mimes:jpg,jpeg,png|max:1024'
         ],
         [
             'title.required'       => 'This field is required',
             'title.unique'         => 'This title already exists',
             'author.required'      => 'This field is required',
-            'book_detail.required' => 'This field is required'
+            'book_detail.required' => 'This field is required',
+            'image.mimes'          => 'File must be JPEG, JPG or PNG',
+            'image.max'            => 'File size maximum 1Mb'
         ]);
 
         if($validator->fails()){
@@ -100,10 +113,22 @@ class BookController extends Controller
             ], 401);
         }
 
-        $data = Book::where('id', $id)->update([
+        $book = Book::findOrFail($id);
+
+        if($request->hasFile('image')){
+            if($book->image){
+                Storage::disk('public')->delete('covers/' . $book->image);
+            }
+            $file = $request->file('image');
+            $fileName = $file->getClientOriginalName();
+            Storage::disk('public')->putFileAs('covers', $file, $fileName);
+        }
+
+        $data = $book->update([
             'title'       => $request->title,
             'author'      => $request->author,
-            'book_detail' => $request->book_detail
+            'book_detail' => $request->book_detail,
+            'image'       => $fileName ?? null 
         ]);
 
         return response()->json([
@@ -113,9 +138,6 @@ class BookController extends Controller
         ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         try{
