@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -120,5 +122,23 @@ class TransactionController extends Controller
                 'error'   => $e->getMessage(),
             ], 404);
         }
+    }
+
+    public function dashboard()
+    {
+        $users = User::all()->count();
+        $books = Book::all()->count();
+        $availableBooks     = Book::where('status', 1)->count();
+        $notAvailableBooks  = Book::where('status', 2)->count();
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Data Berhasil Ditampilkan',
+            'data'    => [
+                'users' => $users, 
+                'books' => $books, 
+                'available'    => $availableBooks, 
+                'notAvailable' => $notAvailableBooks]
+        ], 200);
     }
 }

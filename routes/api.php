@@ -50,3 +50,5 @@ Route::post('/transaction', [TransactionController::class, 'store'])->middleware
 Route::get('/transaction/{id}', [TransactionController::class, 'show'])->middleware(['auth:sanctum', 'role']);
 Route::patch('/transaction/{id}', [TransactionController::class, 'update'])->middleware(['auth:sanctum', 'role']);
 Route::delete('/transaction/{id}', [TransactionController::class, 'destroy'])->middleware(['auth:sanctum', 'role']);
+
+Route::get('/transactiondata', [TransactionController::class, 'dashboard']);
