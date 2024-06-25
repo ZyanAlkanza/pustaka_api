@@ -12,9 +12,27 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-    public function index()
+    // public function index()
+    // {
+    //     $data = User::where('role', 3)->paginate(10);
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'Data berhasil ditampilkan',
+    //         'data' => $data,
+    //     ], 200);
+    // }
+
+    public function index(Request $request)
     {
-        $data = User::where('role', 3)->paginate(10);
+        $query = User::where('role', 3);
+
+        if ($request->has('search')) {
+            $search = $request->query('search');
+            $query->where('username', 'LIKE', "%{$search}%");
+        }
+
+        $data = $query->paginate(10);
+
         return response()->json([
             'status' => true,
             'message' => 'Data berhasil ditampilkan',
