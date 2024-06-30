@@ -11,11 +11,28 @@ use Illuminate\Validation\Rule;
 
 class BookController extends Controller
 {
-    public function index()
-    {
-        $data = Book::all();
+    // public function index()
+    // {
+    //     $data = Book::paginate(10);
+    //     return response()->json([
+    //         'status'  => true,
+    //         'message' => 'Data Berhasil Ditampilkan',
+    //         'data'    => $data
+    //     ], 200);
+    // }
+
+    public function index(Request $request){
+        $query = Book::query();
+
+        if($request->has('search')){
+            $search = $request->query('search');
+            $query->where('title', 'LIKE', "%{$search}%")->orWhere('author', 'LIKE', "%{$search}%");
+        }
+
+        $data=$query->paginate(10);
+
         return response()->json([
-            'status'  => true,
+            'statur'  => true,
             'message' => 'Data Berhasil Ditampilkan',
             'data'    => $data
         ], 200);
@@ -142,6 +159,9 @@ class BookController extends Controller
     {
         try{
             $data = Book::findOrFail($id);
+            if($data->image){
+                Storage::disk('public')->delete('covers/' . $data->image);
+            }
             $data->delete();
             return response()->json([
                 'status'  => true,
@@ -155,5 +175,15 @@ class BookController extends Controller
                 'error'    => $e->getMessage(), 
             ], 404);
         }
+    }
+
+    public function home()
+    {
+        $data = Book::all();
+        return response()->json([
+            'status'  => true,
+            'message' => 'Data Berhasil Ditampilkan',
+            'data'    => $data
+        ], 200);
     }
 }
