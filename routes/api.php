@@ -45,6 +45,8 @@ Route::get('/book/{id}', [BookController::class, 'show']);
 Route::patch('/book/{id}', [BookController::class, 'update'])->middleware(['auth:sanctum', 'role']);
 Route::delete('/book/{id}', [BookController::class, 'destroy'])->middleware(['auth:sanctum', 'role']);
 
+Route::get('/home',[BookController::class, 'home']);
+
 Route::get('/transactions', [TransactionController::class, 'index'])->middleware(['auth:sanctum', 'role']);
 Route::post('/transaction', [TransactionController::class, 'store'])->middleware(['auth:sanctum', 'role']);
 Route::get('/transaction/{id}', [TransactionController::class, 'show'])->middleware(['auth:sanctum', 'role']);
