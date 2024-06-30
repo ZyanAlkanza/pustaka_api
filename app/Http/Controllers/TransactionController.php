@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Transaction;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -13,11 +14,16 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        $data = Transaction::all();
+        $data = Transaction::with('book', 'user')->get();
+        foreach ($data as $transaction) {
+            $transaction->formatted_loan_date = Carbon::parse($transaction->loan_date)->locale('id')->isoFormat('DD MMMM YYYY');
+            $transaction->formatted_date_of_return = Carbon::parse($transaction->date_of_return)->locale('id')->isoFormat('DD MMMM YYYY');
+        }
+        // $data = Transaction::all();
         return response()->json([
             'status'  => true,
             'message' => 'Data Berhasil Ditampilkan',
-            'data'    => $data
+            'data'    =>  $data
         ], 200);
     }
 
@@ -59,6 +65,9 @@ class TransactionController extends Controller
     {
         try{
             $data = Transaction::with('user', 'book')->findOrfail($id);
+            $data->format_loan_date = Carbon::parse($data->loan_date)->locale('id')->isoFormat('DD MMMM YYYY');
+            $data->format_date_of_return = Carbon::parse($data->date_of_return)->locale('id')->isoFormat('DD MMMM YYYY');
+            $data->makeHidden('loan_date', 'date_of_return');
             return response()->json([
                 'status'  => true,
                 'message' => 'Data Berhasil Ditampilkan',
