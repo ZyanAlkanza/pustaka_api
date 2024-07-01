@@ -186,4 +186,14 @@ class BookController extends Controller
             'data'    => $data
         ], 200);
     }
+
+    public function booksData()
+    {
+        $data = Book::orderBy('title')->get();
+        return response()->json([
+            'status' => true,
+            'message' => 'Data berhasil ditampilkan',
+            'data' => $data,
+        ], 200);
+    }
 }

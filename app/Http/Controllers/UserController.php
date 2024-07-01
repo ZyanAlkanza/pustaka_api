@@ -12,15 +12,6 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-    // public function index()
-    // {
-    //     $data = User::where('role', 3)->paginate(10);
-    //     return response()->json([
-    //         'status' => true,
-    //         'message' => 'Data berhasil ditampilkan',
-    //         'data' => $data,
-    //     ], 200);
-    // }
 
     public function index(Request $request)
     {
@@ -167,5 +158,15 @@ class UserController extends Controller
                 'error'   => $e->getMessage()
             ], 404);
         }
+    }
+
+    public function usersData()
+    {
+        $data = User::where('role', 3)->orderBy('username')->get();
+        return response()->json([
+            'status' => true,
+            'message' => 'Data berhasil ditampilkan',
+            'data' => $data,
+        ], 200);
     }
 }

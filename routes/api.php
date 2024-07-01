@@ -39,11 +39,15 @@ Route::get('/user/{id}', [UserController::class, 'show'])->middleware(['auth:san
 Route::put('/user/{id}', [UserController::class, 'update'])->middleware(['auth:sanctum', 'role']);
 Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware(['auth:sanctum', 'role']);
 
+Route::get('/usersData', [UserController::class, 'usersData'])->middleware(['auth:sanctum', 'role']);
+
 Route::get('/books', [BookController::class, 'index']);
 Route::post('/book', [BookController::class, 'store'])->middleware(['auth:sanctum', 'role']);
 Route::get('/book/{id}', [BookController::class, 'show']);
 Route::patch('/book/{id}', [BookController::class, 'update'])->middleware(['auth:sanctum', 'role']);
 Route::delete('/book/{id}', [BookController::class, 'destroy'])->middleware(['auth:sanctum', 'role']);
+
+Route::get('/booksData', [BookController::class, 'booksData'])->middleware(['auth:sanctum', 'role']);
 
 Route::get('/home',[BookController::class, 'home']);
 
