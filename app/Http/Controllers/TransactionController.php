@@ -106,6 +106,14 @@ class TransactionController extends Controller
             ], 401);
         }
 
+        Book::where('id', $request->prevBook_id)->update([
+            'status' => 1
+        ]);
+
+        Book::where('id', $request->book_id)->update([
+            'status' => 2
+        ]);
+
         $data = Transaction::where('id', $id)->update([
             'user_id'  => $request->user_id,
             'book_id'  => $request->book_id,
