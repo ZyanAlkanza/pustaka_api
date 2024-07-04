@@ -12,14 +12,29 @@ use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends Controller
 {
+    // public function index()
+    // {
+    //     $data = Transaction::with('book', 'user')->get();
+    //     foreach ($data as $transaction) {
+    //         $transaction->formatted_loan_date = Carbon::parse($transaction->loan_date)->locale('id')->isoFormat('DD MMMM YYYY');
+    //         $transaction->formatted_date_of_return = Carbon::parse($transaction->date_of_return)->locale('id')->isoFormat('DD MMMM YYYY');
+    //     }
+    //     // $data = Transaction::all();
+    //     return response()->json([
+    //         'status'  => true,
+    //         'message' => 'Data Berhasil Ditampilkan',
+    //         'data'    =>  $data
+    //     ], 200);
+    // }
+
     public function index()
     {
-        $data = Transaction::with('book', 'user')->get();
+        $data = Transaction::with('book', 'user')->paginate(10);
         foreach ($data as $transaction) {
-            $transaction->formatted_loan_date = Carbon::parse($transaction->loan_date)->locale('id')->isoFormat('DD MMMM YYYY');
-            $transaction->formatted_date_of_return = Carbon::parse($transaction->date_of_return)->locale('id')->isoFormat('DD MMMM YYYY');
+            $transaction->format_loan_date = Carbon::parse($transaction->loan_date)->locale('id')->isoFormat('DD MMMM YYYY');
+            $transaction->format_date_of_return = Carbon::parse($transaction->date_of_return)->locale('id')->isoFormat('DD MMMM YYYY');
         }
-        // $data = Transaction::all();
+        
         return response()->json([
             'status'  => true,
             'message' => 'Data Berhasil Ditampilkan',
