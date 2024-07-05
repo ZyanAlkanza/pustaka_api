@@ -27,9 +27,22 @@ class TransactionController extends Controller
     //     ], 200);
     // }
 
-    public function index()
+    public function index(Request $request)
     {
-        $data = Transaction::with('book', 'user')->paginate(10);
+        $query = Transaction::with('book', 'user')->orderBy('id');
+        
+        if ($request->has('search')) {
+            $search = $request->query('search');
+            $query->whereHas('user', function ($query) use ($search) {
+                $query->where('username', 'LIKE', "%{$search}%");
+            });
+            $query->orWhereHas('book', function ($query) use ($search) {
+                $query->where('title', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $data = $query->paginate(10);
+        
         foreach ($data as $transaction) {
             $transaction->format_loan_date = Carbon::parse($transaction->loan_date)->locale('id')->isoFormat('DD MMMM YYYY');
             $transaction->format_date_of_return = Carbon::parse($transaction->date_of_return)->locale('id')->isoFormat('DD MMMM YYYY');
