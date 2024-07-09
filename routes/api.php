@@ -35,7 +35,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 
 Route::get('/users', [UserController::class, 'index'])->middleware(['auth:sanctum', 'role']);
 Route::post('/user', [UserController::class, 'store'])->middleware(['auth:sanctum', 'role']);
-Route::get('/user/{id}', [UserController::class, 'show'])->middleware(['auth:sanctum', 'role']);
+Route::get('/user/{id}', [UserController::class, 'show']);
 Route::put('/user/{id}', [UserController::class, 'update'])->middleware(['auth:sanctum', 'role']);
 Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware(['auth:sanctum', 'role']);
 
