@@ -190,4 +190,33 @@ class TransactionController extends Controller
                 'notAvailable' => $notAvailableBooks]
         ], 200);
     }
+
+    public function myBook($id)
+    {
+        $data = Transaction::with('book')->where('user_id', $id)->get();
+
+        foreach ($data as $transaction) {
+            $transaction->format_loan_date = Carbon::parse($transaction->loan_date)->locale('id')->isoFormat('DD MMMM YYYY');
+            $transaction->format_date_of_return = Carbon::parse($transaction->date_of_return)->locale('id')->isoFormat('DD MMMM YYYY');
+
+            $targetDate = Carbon::parse($transaction->date_of_return);
+            $today = Carbon::now();
+            // $transaction->daysLeft = $targetDate->diffInDays($today);
+
+            if ($targetDate->greaterThan($today)) {
+                $transaction->daysLeft = $targetDate->diffInDays($today);
+            } else {
+                $transaction->daysLeft = 0;
+            }
+
+        }
+        $data->makeHidden('loan_date');
+        $data->makeHidden('date_of_return');
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Data Berhasil Ditampilkan',
+            'data'    => $data
+        ]);
+    }
 }

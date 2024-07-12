@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -58,3 +59,4 @@ Route::patch('/transaction/{id}', [TransactionController::class, 'update'])->mid
 Route::delete('/transaction/{id}', [TransactionController::class, 'destroy'])->middleware(['auth:sanctum', 'role']);
 
 Route::get('/transactiondata', [TransactionController::class, 'dashboard']);
+Route::get('/myBook/{id}', [TransactionController::class, 'myBook']);
