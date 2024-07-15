@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\MarkController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Models\Transaction;
@@ -57,6 +58,9 @@ Route::post('/transaction', [TransactionController::class, 'store'])->middleware
 Route::get('/transaction/{id}', [TransactionController::class, 'show'])->middleware(['auth:sanctum', 'role']);
 Route::patch('/transaction/{id}', [TransactionController::class, 'update'])->middleware(['auth:sanctum', 'role']);
 Route::delete('/transaction/{id}', [TransactionController::class, 'destroy'])->middleware(['auth:sanctum', 'role']);
+
+Route::get('/marks/{id}', [MarkController::class, 'index']);
+Route::post('/addMark', [MarkController::class, 'addMark']);
 
 Route::get('/transactiondata', [TransactionController::class, 'dashboard']);
 Route::get('/myBook/{id}', [TransactionController::class, 'myBook']);

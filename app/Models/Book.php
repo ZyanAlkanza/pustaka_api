@@ -21,6 +21,10 @@ class Book extends Model
         return $this->hasMany(Transaction::class);
     }
 
+    public function mark(){
+        return $this->hasMany(Mark::class);
+    }
+
     protected $hidden = [
         'created_at',
         'updated_at',
