@@ -60,7 +60,10 @@ Route::patch('/transaction/{id}', [TransactionController::class, 'update'])->mid
 Route::delete('/transaction/{id}', [TransactionController::class, 'destroy'])->middleware(['auth:sanctum', 'role']);
 
 Route::get('/marks/{id}', [MarkController::class, 'index']);
-Route::post('/addMark', [MarkController::class, 'addMark']);
+// Route::post('/addMark', [MarkController::class, 'addMark']);
+Route::post('/toggleMark', [MarkController::class, 'toggleMark']);
+Route::get('/checkMark', [MarkController::class, 'checkMark']);
+
 
 Route::get('/transactiondata', [TransactionController::class, 'dashboard']);
 Route::get('/myBook/{id}', [TransactionController::class, 'myBook']);
