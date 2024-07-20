@@ -67,3 +67,5 @@ Route::get('/checkMark', [MarkController::class, 'checkMark']);
 
 Route::get('/transactiondata', [TransactionController::class, 'dashboard']);
 Route::get('/myBook/{id}', [TransactionController::class, 'myBook']);
+Route::post('/loanBook', [TransactionController::class, 'loanBook']);
+Route::put('/returnMyBook/{id}', [TransactionController::class, 'returnMyBook']);

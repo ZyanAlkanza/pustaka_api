@@ -193,7 +193,7 @@ class TransactionController extends Controller
 
     public function myBook($id)
     {
-        $data = Transaction::with('book')->where('user_id', $id)->get();
+        $data = Transaction::with('book')->where('user_id', $id)->where('return_date', null)->get();
 
         foreach ($data as $transaction) {
             $transaction->format_loan_date = Carbon::parse($transaction->loan_date)->locale('id')->isoFormat('DD MMMM YYYY');
@@ -218,5 +218,42 @@ class TransactionController extends Controller
             'message' => 'Data Berhasil Ditampilkan',
             'data'    => $data
         ]);
+    }
+
+    public function loanBook(Request $request)
+    {
+        Book::where('id', $request->book_id)->update([
+            'status' => 2
+        ]);
+
+        $data = Transaction::create([
+            'user_id' => $request->user_id,
+            'book_id' => $request->book_id,
+            'loan_date' => \Carbon\Carbon::today()->toDateString(),
+            'date_of_return' => \Carbon\Carbon::today()->addDays(10)->toDateString(),
+        ]);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Buku Berhasil Dipinjam',
+            'data'    => $data
+        ], 200);
+    }
+
+    public function returnMyBook(Request $request, $id)
+    {
+        Book::where('id', $request->book_id)->update([
+            'status' => 1,
+        ]);
+
+        $data = Transaction::where('id', $id)->update([
+            'return_date' => Carbon::now(),
+        ]);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Buku Berhasil Dikembalikan',            
+            'data'    => $data,
+        ],200 );
     }
 }
