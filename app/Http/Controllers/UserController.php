@@ -169,4 +169,46 @@ class UserController extends Controller
             'data' => $data,
         ], 200);
     }
+
+    public function userEdit(Request $request)
+    {
+        $validator = Validator::make($request->all(),
+        [
+            'username'  => 'required|min:3',
+            'email'     => ['required','email',Rule::unique('users')->ignore($request->id)],
+            'address'   => 'required',
+            'gender'    => 'required',
+            'phone'     => 'required',
+        ],
+        [
+            'username.required'  => 'This field is required',
+            'email.required'     => 'This field is required',
+            'email.email'        => 'Your email is invalid',
+            'email.unique'       => 'Your email is already taken',
+            'address.required'   => 'This field is required',
+            'gender.required'    => 'This field is required',
+            'phone.required'     => 'This field is required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Validasi Gagal',
+                'data'      => $validator->errors(),
+            ], 401);
+        }
+
+        User::where('id', $request->id)->update([
+            'username'  => $request->username,
+            'email'     => $request->email,
+            'address'   => $request->address,
+            'gender'    => $request->gender,
+            'phone'     => $request->phone,
+        ]);
+
+        return response()->json([
+            'status'    => true,
+            'message'   => 'Data Berhasil Diupdate',
+        ], 200);
+    }
 }
