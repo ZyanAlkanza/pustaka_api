@@ -211,4 +211,47 @@ class UserController extends Controller
             'message'   => 'Data Berhasil Diupdate',
         ], 200);
     }
+
+    public function passwordEdit(Request $request)
+    {
+        $validator = Validator::make($request->all(),
+        [
+            'password'              => 'required',
+            'new_password'          => 'required|min:8|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'required'
+        ],[
+            'password.required'              => 'This field is required',
+            'new_password.required'          => 'This field is required',
+            'new_password.min'               => 'The password must be 8 or more characters',
+            'new_password.required_with'     => '',
+            'new_password.same'              => 'Your password doesnt match',
+            'password_confirmation.required' => 'This field is required'
+        ]); 
+
+        if($validator->fails()){
+            return response()->json([
+                'status'  => false,
+                'message' => 'Validasi Gagal',
+                'data'    => $validator->errors(),
+            ], 401 );
+        }
+
+        $user = User::where('id', $request->id)->first();
+
+        if ($user && Hash::check($request->input('password'), $user->password)) {
+            $user->update([
+                'password' => Hash::make($request->new_password),
+            ]);
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Ubah Password Berhasil',
+            ], 200);
+        } else {
+            return response()->json([
+                'status'   => false,
+                'message'  => 'Password Anda Salah',
+            ], 401);
+        }
+    }
 }

@@ -43,6 +43,7 @@ Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware(['au
 
 Route::get('/usersData', [UserController::class, 'usersData'])->middleware(['auth:sanctum', 'role']);
 Route::put('/userEdit', [UserController::class, 'userEdit'])->middleware(['auth:sanctum']);
+Route::put('/passwordEdit', [UserController::class, 'passwordEdit'])->middleware(['auth:sanctum']);
 
 Route::get('/books', [BookController::class, 'index']);
 Route::post('/book', [BookController::class, 'store'])->middleware(['auth:sanctum', 'role']);
