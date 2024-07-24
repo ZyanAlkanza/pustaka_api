@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -179,6 +180,7 @@ class UserController extends Controller
             'address'   => 'required',
             'gender'    => 'required',
             'phone'     => 'required',
+            'image'     => 'image|mimes:jpg,jpeg,png|max:2048'
         ],
         [
             'username.required'  => 'This field is required',
@@ -188,6 +190,10 @@ class UserController extends Controller
             'address.required'   => 'This field is required',
             'gender.required'    => 'This field is required',
             'phone.required'     => 'This field is required',
+            'image.mimes'        => 'File must be JPEG, JPG or PNG',
+            'image.max'          => 'File size maximum 2Mb'
+
+
         ]);
 
         if($validator->fails()){
@@ -198,12 +204,26 @@ class UserController extends Controller
             ], 401);
         }
 
-        User::where('id', $request->id)->update([
+        $user = User::findOrFail($request->id);
+
+        if($request->hasFile('image')){
+            if($user->image){
+                Storage::disk('public')->delete('profile/'. $user->image);
+            }
+            $file = $request->file('image');
+            $fileName = $file->getClientOriginalName();
+            Storage::disk('public')->putFileAs('profile', $file, $fileName);
+        }else{
+            $fileName = $user->image;
+        }
+
+        $data = $user->update([
             'username'  => $request->username,
             'email'     => $request->email,
             'address'   => $request->address,
             'gender'    => $request->gender,
             'phone'     => $request->phone,
+            'image'     => $fileName ?? null
         ]);
 
         return response()->json([

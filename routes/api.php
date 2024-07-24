@@ -42,7 +42,7 @@ Route::put('/user/{id}', [UserController::class, 'update'])->middleware(['auth:s
 Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware(['auth:sanctum', 'role']);
 
 Route::get('/usersData', [UserController::class, 'usersData'])->middleware(['auth:sanctum', 'role']);
-Route::put('/userEdit', [UserController::class, 'userEdit'])->middleware(['auth:sanctum']);
+Route::patch('/userEdit', [UserController::class, 'userEdit']);
 Route::put('/passwordEdit', [UserController::class, 'passwordEdit'])->middleware(['auth:sanctum']);
 
 Route::get('/books', [BookController::class, 'index']);
