@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
 
 class AuthController extends Controller
 {
@@ -96,6 +100,52 @@ class AuthController extends Controller
             'status'  => false,
             'message' => 'Login Gagal',
         ], 401);
+    }
+
+    public function forgot(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'email'  => 'required|email'
+        ],[
+            'email.required' => 'This field is required',
+            'email.email'    => 'This field is invalid'
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status'  => false,
+                'message' => 'Validasi Gagal',
+                'data'    => $validator->errors()
+            ], 401);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        if(!$user){
+            return response()->json([
+                'status'  => false,
+                'message' => 'Email Tidak Terdaftar'
+            ], 404);
+        }
+
+        $token = random_int(100000, 999999);
+
+        DB::table('password_reset_tokens')->insert([
+            'email' => $request->email,
+            'token' => $token,
+            'created_at' => now()
+        ]);
+
+        $to      = 'akun18download@gmail.com';
+        $subject = 'Reset Password';
+        $message = 'This is your recovery code '.$token;
+
+        mail($to, $subject, $message);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Kode pemulihan berhasil dikirim',
+        ], 200);
     }
 
     public function logout()

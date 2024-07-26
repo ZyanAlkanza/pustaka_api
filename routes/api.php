@@ -7,6 +7,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +35,7 @@ Route::get('/', function(){
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/forgot', [AuthController::class, 'forgot']);
 
 Route::get('/users', [UserController::class, 'index'])->middleware(['auth:sanctum', 'role']);
 Route::post('/user', [UserController::class, 'store'])->middleware(['auth:sanctum', 'role']);
