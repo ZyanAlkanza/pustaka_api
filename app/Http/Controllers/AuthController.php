@@ -136,7 +136,7 @@ class AuthController extends Controller
             'created_at' => now()
         ]);
 
-        $to      = 'akun18download@gmail.com';
+        $to      = $request->email;
         $subject = 'Reset Password';
         $message = 'This is your recovery code '.$token;
 
@@ -145,6 +145,48 @@ class AuthController extends Controller
         return response()->json([
             'status'  => true,
             'message' => 'Kode pemulihan berhasil dikirim',
+        ], 200);
+    }
+
+    public function recovery(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'token'  => 'required|numeric',
+            'email'  => 'required|email'
+        ],[
+            'token.required' => 'This field is required',
+            'token.numeric'   => 'This field is not number',
+            'email.required' => 'This field is required',
+            'email.email'    => 'This field is invalid'
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status'  => false,
+                'message' => 'Validasi Gagal',
+                'data'    => $validator->errors()
+            ], 401);
+        }
+
+        $user = DB::table('password_reset_tokens')->where('email', $request->email)->first();
+
+        if(!$user){
+            return response()->json([
+                'status'  => false,
+                'message' => 'Email Tidak Terdaftar'
+            ], 404);
+        }
+
+        if($user->token != $request->token){
+            return response()->json([
+                'status'  => false,
+                'message' => 'Kode Pemulihan Salah'
+            ], 404);    
+        }
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Kode Pemulihan Benar',
         ], 200);
     }
 

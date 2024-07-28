@@ -36,6 +36,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/forgot', [AuthController::class, 'forgot']);
+Route::post('/recovery', [AuthController::class, 'recovery']);
 
 Route::get('/users', [UserController::class, 'index'])->middleware(['auth:sanctum', 'role']);
 Route::post('/user', [UserController::class, 'store'])->middleware(['auth:sanctum', 'role']);
