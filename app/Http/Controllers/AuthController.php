@@ -190,6 +190,45 @@ class AuthController extends Controller
         ], 200);
     }
 
+    public function reset(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'password'  => 'required|min:8|confirmed',
+            'password_confirmation'  => 'required|min:8'
+        ],[
+            'password.required'  => 'This field is required',
+            'password.min'       => 'Password must be 8 or more characters',
+            'password.confirmed' => 'Your password doesnt match',
+            'password_confirmation.required'  => 'This field is required',
+            'password_confirmation.min'       => 'Password must be 8 or more characters',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status'  => false,
+                'message' => 'Validasi Gagal',
+                'data'    => $validator->errors()
+            ], 401);
+        }
+
+        $user= User::where('email', $request->email)->first();
+
+        if(!$user){
+            return response()->json([
+                'status'  => false,
+                'message' => 'Data Tidak Ditemukan',
+            ], 404);
+        }
+
+        $user->update(['password' => Hash::make($request->password)]);
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Password Berhasil Direset',
+        ], 200);
+    }
+
     public function logout()
     {
         $user = Auth::user();
